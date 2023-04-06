@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Alexandr appp-beck",
   "main": "index.js",
-  "homepage": "https://github.com/19alexandr80/app-beck",
+  "homepage": "https://19alexandr80.github.io/app-beck",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
