@@ -1,5 +1,4 @@
 import "./sass/index.scss";
-console.log("gggggggggggggggggggggggggg");
 import Notiflix from "notiflix";
 import { NewApi } from "./js/api.js";
 import SimpleLightbox from "simplelightbox";
