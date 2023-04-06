@@ -6,7 +6,7 @@
   "homepage": "https://19alexandr80.github.io/app-beck",
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
-    "build": "webpack --mode production"
+    "build": "webpack --mode development"
   },
   "repository": {
     "type": "git",
