@@ -3,7 +3,8 @@ import Notiflix from "notiflix";
 import { NewApi, NewFirebase } from "./js/api.js";
 import SimpleLightbox from "simplelightbox";
 const firebase = new NewFirebase();
-console.log(firebase.getUser);
+// console.log(firebase.getUser);
+// firebase.getUser().then((v) => console.log(v));
 let loadedElement = 0;
 let lastEl = null;
 const galleryEl = document.querySelector(".gallery");
@@ -57,17 +58,28 @@ async function onsubmit(e) {
   aapi.setInput(userValue);
   aapi.resetPege();
   galleryEl.innerHTML = "";
-  // =======================================
+  const request = {
+    text: userValue,
+    date: new Date().toJSON(),
+  };
+  try {
+    const fire = await firebase.postRequest(request);
+    console.log(fire.data);
+  } catch (error) {
+    console.error(error);
+  }
+  try {
+    const fire = await firebase.getRequest();
+    console.log(fire.data);
+  } catch (error) {
+    console.error(error);
+  }
   try {
     const data = await aapi.getUser();
     submitProcessing(data);
   } catch (error) {
     console.error(error);
   }
-  // ========================================
-  // const data = await aapi.getUser();
-  // submitProcessing(data);
-  // ========================================
 }
 function submitProcessing({ hits, totalHits }) {
   if (hits.length === 0) {

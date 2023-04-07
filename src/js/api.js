@@ -37,16 +37,23 @@ export class NewApi {
 
 export class NewFirebase {
   constructor() {
-    const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
+    this.firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
   }
-  async getUser() {
+  async postRequest(request) {
     try {
-      const response = await axios.post(`${this.firebaseApp}bbbbbbb`, {
-        firstName: "Fred",
-        lastName: "Flintstone",
-      });
+      const response = await axios.post(`${this.firebaseApp}box.json`, request);
 
       return response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async getRequest() {
+    try {
+      const respon = await axios.get(
+        "https://app-back-bb275-default-rtdb.firebaseio.com/box.json"
+      );
+      return respon;
     } catch (error) {
       console.error(error);
     }
