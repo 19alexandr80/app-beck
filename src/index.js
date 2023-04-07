@@ -1,7 +1,9 @@
 import "./sass/index.scss";
 import Notiflix from "notiflix";
-import { NewApi } from "./js/api.js";
+import { NewApi, NewFirebase } from "./js/api.js";
 import SimpleLightbox from "simplelightbox";
+const firebase = new NewFirebase();
+console.log(firebase.getUser);
 let loadedElement = 0;
 let lastEl = null;
 const galleryEl = document.querySelector(".gallery");

@@ -1,7 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
+
+const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
+
 export class NewApi {
   constructor() {
-    this.input = '';
+    this.input = "";
     this.page = 1;
     this.amountOfElements = 40;
     this.totalHits = null;
@@ -29,5 +32,23 @@ export class NewApi {
   }
   getAmountOfElements() {
     return this.amountOfElements;
+  }
+}
+
+export class NewFirebase {
+  constructor() {
+    const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
+  }
+  async getUser() {
+    try {
+      const response = await axios.post(`${this.firebaseApp}bbbbbbb`, {
+        firstName: "Fred",
+        lastName: "Flintstone",
+      });
+
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
