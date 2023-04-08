@@ -70,7 +70,11 @@ async function onsubmit(e) {
   }
   try {
     const fire = await firebase.getRequest();
-    console.log(fire.data);
+    const requestKey = Object.keys(fire.data);
+    const requestData = requestKey.map((v) => {
+      return fire.data[v];
+    });
+    console.log(requestData);
   } catch (error) {
     console.error(error);
   }
