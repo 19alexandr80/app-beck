@@ -1,7 +1,95 @@
+// import {
+//   getAuth,
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+// } from "firebase/auth";
+
+// import * as firestoreApp from "firebase/app";
+// import * as firestoreAuth from "firebase/auth";
+
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 import "./sass/index.scss";
 import Notiflix from "notiflix";
 import { NewApi, NewFirebase } from "./js/api.js";
 import SimpleLightbox from "simplelightbox";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCBtpyq_JcjZVrgTcRGIRZbPiF1YdsGPM0",
+  authDomain: "app-back-bb275.firebaseapp.com",
+  databaseURL: "https://app-back-bb275-default-rtdb.firebaseio.com",
+  projectId: "app-back-bb275",
+  storageBucket: "app-back-bb275.appspot.com",
+  messagingSenderId: "342626939408",
+  appId: "1:342626939408:web:b6d958ff5664c393491095",
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Get a list of cities from your database
+
+// async function getCities(db) {
+//   const citiesCol = collection(db, "cities");
+//   console.log("11111111111111111", db);
+//   console.log("11111111111111111", citiesCol);
+//   try {
+//     const citySnapshot = await getDocs(citiesCol);
+//     console.log("222222222222222", citySnapshot);
+//   } catch (error) {
+//     console.log("error: ", error);
+//   }
+//   // const citySnapshot = await getDocs(citiesCol);
+//   // console.log("222222222222222", citySnapshot);
+//   // const cityList = citySnapshot.docs.map((doc) => doc.data());
+//   // return cityList;
+// }
+
+// async function fire() {
+//   const app = await firestoreApp.initializeApp(firebaseConfig);
+//   // const db = await getFirestore(app);
+//   console.log(firestoreAuth);
+//   return app;
+// }
+// // console.log(fire().then(r => { }));
+// fire().then((r) => {
+//   console.log(r._options, "nnnnnnnnnnnnnnnnnnn");
+// });
+
+const email = "usanka1980@gmail.com";
+const password = 12345678;
+
+const auth = getAuth();
+console.log(auth);
+createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert(errorMessage);
+    // ..
+  });
+signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in
+    const user = userCredential.user;
+    console.log(user);
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+// =================================================================
 const firebase = new NewFirebase();
 // console.log(firebase.getUser);
 // firebase.getUser().then((v) => console.log(v));

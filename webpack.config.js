@@ -14,6 +14,11 @@ module.exports = {
         test: /\.(scss|css)$/,
         use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"],
       },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
+      },
     ],
   },
   devServer: {

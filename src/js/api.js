@@ -34,14 +34,17 @@ export class NewApi {
     return this.amountOfElements;
   }
 }
-
+const uId = "FOwZf9kgeRZxDZwx5UA63XJsEKw2";
 export class NewFirebase {
   constructor() {
     this.firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
   }
   async postRequest(request) {
     try {
-      const response = await axios.post(`${this.firebaseApp}box.json`, request);
+      const response = await axios.post(
+        `${this.firebaseApp}box/accounts:signInWithCustomToken?key=FOwZf9kgeRZxDZwx5UA63XJsEKw2.json`,
+        request
+      );
 
       return response;
     } catch (error) {
@@ -59,3 +62,4 @@ export class NewFirebase {
     }
   }
 }
+// ================================
