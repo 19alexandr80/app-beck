@@ -34,21 +34,24 @@ export class NewApi {
     return this.amountOfElements;
   }
 }
-const uId = "FOwZf9kgeRZxDZwx5UA63XJsEKw2";
+
+// ===============================================================
+
 export class NewFirebase {
   constructor() {
     this.firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
   }
-  async postRequest(request) {
+  async postRequest(request, r = null) {
     try {
       const response = await axios.post(
-        `${this.firebaseApp}box/accounts:signInWithCustomToken?key=FOwZf9kgeRZxDZwx5UA63XJsEKw2.json`,
+        `${this.firebaseApp}box.json?auth=${r}`,
         request
       );
 
       return response;
     } catch (error) {
-      console.error(error);
+      alert("НЕТ РЕГЕСТРАЦИИ");
+      console.error("errrrrror", error);
     }
   }
   async getRequest() {
@@ -59,6 +62,18 @@ export class NewFirebase {
       return respon;
     } catch (error) {
       console.error(error);
+    }
+  }
+  async deleteRequest(r = null, id) {
+    try {
+      const response = await axios.delete(
+        `${this.firebaseApp}box/${id}.json?auth=${r}`
+      );
+
+      return response;
+    } catch (error) {
+      alert("НЕТ РЕГЕСТРАЦИИ");
+      console.error("errrrrror", error);
     }
   }
 }

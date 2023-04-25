@@ -1,14 +1,4 @@
-// import {
-//   getAuth,
-//   createUserWithEmailAndPassword,
-//   signInWithEmailAndPassword,
-// } from "firebase/auth";
-
-// import * as firestoreApp from "firebase/app";
-// import * as firestoreAuth from "firebase/auth";
-
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -29,70 +19,86 @@ const firebaseConfig = {
   messagingSenderId: "342626939408",
   appId: "1:342626939408:web:b6d958ff5664c393491095",
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+initializeApp(firebaseConfig);
+const firebase = new NewFirebase();
+const signInButton = document.querySelector(".sign-in-button");
+const authButton = document.querySelector(".auth-button");
+const authZone = document.querySelector(".auth-zone");
 
-// Get a list of cities from your database
-
-// async function getCities(db) {
-//   const citiesCol = collection(db, "cities");
-//   console.log("11111111111111111", db);
-//   console.log("11111111111111111", citiesCol);
-//   try {
-//     const citySnapshot = await getDocs(citiesCol);
-//     console.log("222222222222222", citySnapshot);
-//   } catch (error) {
-//     console.log("error: ", error);
-//   }
-//   // const citySnapshot = await getDocs(citiesCol);
-//   // console.log("222222222222222", citySnapshot);
-//   // const cityList = citySnapshot.docs.map((doc) => doc.data());
-//   // return cityList;
-// }
-
-// async function fire() {
-//   const app = await firestoreApp.initializeApp(firebaseConfig);
-//   // const db = await getFirestore(app);
-//   console.log(firestoreAuth);
-//   return app;
-// }
-// // console.log(fire().then(r => { }));
-// fire().then((r) => {
-//   console.log(r._options, "nnnnnnnnnnnnnnnnnnn");
-// });
-
-const email = "usanka1980@gmail.com";
+const email = "usanka80@gmail.com";
 const password = 12345678;
 
+authHtml();
+
 const auth = getAuth();
-console.log(auth);
-createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
+
+// Listener auth ==============================================
+
+signInButton.addEventListener("click", async () => {
+  try {
+    const fire = await signInWithEmailAndPassword(auth, email, password);
+    localStorage.setItem(email, fire._tokenResponse.idToken);
+    authHtml();
+  } catch (error) {
+    console.error("fire.data-error", error);
+  }
+});
+
+// Document auth ==========================================================
+
+async function authHtml() {
+  authZone.querySelector(".auth-ul-zone").innerHTML = "";
+  if (localStorage.getItem(email)) {
+    try {
+      const fire = await firebase.getRequest();
+      if (fire.data) {
+        const requestKey = Object.keys(fire.data);
+        const requestData = requestKey
+          .map((v) => {
+            const reque = fire.data[v];
+            reque.id = v;
+
+            return `<li>Вапрос: ${reque.text} от: ${reque.date}
+            <button type="button" data-id="${v}">delete</button></li>`;
+          })
+          .join("");
+        authZone.querySelector(".auth-ul-zone").innerHTML = requestData;
+        authZone
+          .querySelector(".auth-ul-zone")
+          .addEventListener("click", onDelete);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+async function onDelete(ev) {
+  try {
+    const fire = await firebase.deleteRequest(
+      localStorage.getItem(email),
+      ev.target.dataset.id
+    );
+  } catch (error) {
+    console.error("fire.data-error", error);
+  }
+  authHtml();
+}
+// AYTH =====================================================================
+
+authButton.addEventListener("click", onAuth);
+
+async function onAuth() {
+  try {
+    const fir = await createUserWithEmailAndPassword(auth, email, password);
+    // console.log("fiiiiir", fir);
+  } catch (error) {
+    console.error("jjjjjjjj-error", error);
     const errorMessage = error.message;
     alert(errorMessage);
-    // ..
-  });
-signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in
-    const user = userCredential.user;
-    console.log(user);
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
-// =================================================================
-const firebase = new NewFirebase();
-// console.log(firebase.getUser);
-// firebase.getUser().then((v) => console.log(v));
+  }
+}
+
 let loadedElement = 0;
 let lastEl = null;
 const galleryEl = document.querySelector(".gallery");
@@ -121,14 +127,12 @@ async function observerCallback(entries, observer) {
       );
       return;
     }
-    // ==================================
     try {
       const data = await aapi.getUser();
       infiniteScroll(data);
     } catch (error) {
       console.error(error);
     }
-    // ===================================
   }
 }
 async function onsubmit(e) {
@@ -151,21 +155,16 @@ async function onsubmit(e) {
     date: new Date().toJSON(),
   };
   try {
-    const fire = await firebase.postRequest(request);
-    console.log(fire.data);
+    const fire = await firebase.postRequest(
+      request,
+      localStorage.getItem(email)
+    );
   } catch (error) {
-    console.error(error);
+    console.error("fire.data-error", error);
   }
-  try {
-    const fire = await firebase.getRequest();
-    const requestKey = Object.keys(fire.data);
-    const requestData = requestKey.map((v) => {
-      return fire.data[v];
-    });
-    console.log(requestData);
-  } catch (error) {
-    console.error(error);
-  }
+  // ================================
+  authHtml();
+  // ================================
   try {
     const data = await aapi.getUser();
     submitProcessing(data);

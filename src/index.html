@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Page title</title>
-    <!-- <link rel="stylesheet" href="./sass/index.scss" /> -->
     <!-- <link rel="stylesheet" href="node_modules/modern-normalize/modern-normalize.css"> -->
     <!-- <script type="module" src="./index.js"></script> -->
   </head>
@@ -12,6 +11,11 @@
     <!-- ❗️❗️❗️ Add partials like so for every page -->
     <include src="./partials/example.html"></include>
     <article  id="uk">
+      <div class="auth-zone">
+        <button type="button" class="auth-button">AUTH</button>
+        <button type="button" class="sign-in-button">sign In</button>
+        <ul class="auth-ul-zone"></ul>
+      </div>
   <form class="search-form" id="search-form">
     <input
       type="text"
@@ -22,7 +26,6 @@
     <button type="submit">&#128269</button>
   </form>
   <div class="gallery gallery-div">
-    <!-- Картки зображень -->
   </div>
   <button type="button" class="load-more visually-hidden">Load more</button>
 </article>
