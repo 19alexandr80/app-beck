@@ -1,14 +1,13 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 import "./sass/index.scss";
 import Notiflix from "notiflix";
 import { NewApi, NewFirebase } from "./js/api.js";
 import SimpleLightbox from "simplelightbox";
+import { modalAuth } from "./js/modal";
+import { modalSignIn } from "./js/modalSignIn";
+// modalAuth();
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBtpyq_JcjZVrgTcRGIRZbPiF1YdsGPM0",
@@ -19,14 +18,18 @@ const firebaseConfig = {
   messagingSenderId: "342626939408",
   appId: "1:342626939408:web:b6d958ff5664c393491095",
 };
-initializeApp(firebaseConfig);
+// =============================================================================
+const firre = initializeApp(firebaseConfig);
+// =============================================================================
+
 const firebase = new NewFirebase();
 const signInButton = document.querySelector(".sign-in-button");
 const authButton = document.querySelector(".auth-button");
 const authZone = document.querySelector(".auth-zone");
 
-const email = "usanka80@gmail.com";
-const password = 12345678;
+// const email = "usanka80@gmail.com";
+// console.log(email.substring(0, email.indexOf(".")));
+// const password = 12345678;
 
 authHtml();
 
@@ -34,29 +37,27 @@ const auth = getAuth();
 
 // Listener auth ==============================================
 
-signInButton.addEventListener("click", async () => {
-  try {
-    const fire = await signInWithEmailAndPassword(auth, email, password);
-    localStorage.setItem(email, fire._tokenResponse.idToken);
-    authHtml();
-  } catch (error) {
-    console.error("fire.data-error", error);
-  }
-});
+signInButton.addEventListener("click", onSignIn);
+
+function onSignIn() {
+  modalSignIn(auth);
+}
 
 // Document auth ==========================================================
 
-async function authHtml() {
+export async function authHtml() {
   authZone.querySelector(".auth-ul-zone").innerHTML = "";
-  if (localStorage.getItem(email)) {
+  if (localStorage.getItem("tokenResponse")) {
     try {
-      const fire = await firebase.getRequest();
+      const fire = await firebase.getRequest(
+        localStorage.getItem("tokenResponse"),
+        localStorage.getItem("email")
+      );
       if (fire.data) {
         const requestKey = Object.keys(fire.data);
         const requestData = requestKey
           .map((v) => {
             const reque = fire.data[v];
-            reque.id = v;
 
             return `<li>Вапрос: ${reque.text} от: ${reque.date}
             <button type="button" data-id="${v}">delete</button></li>`;
@@ -67,6 +68,7 @@ async function authHtml() {
           .querySelector(".auth-ul-zone")
           .addEventListener("click", onDelete);
       }
+      authZone.querySelector(".auth-zone__button").innerHTML = "";
     } catch (error) {
       console.error(error);
     }
@@ -74,10 +76,14 @@ async function authHtml() {
 }
 
 async function onDelete(ev) {
+  if (ev.target.tagName !== "BUTTON") {
+    return;
+  }
   try {
-    const fire = await firebase.deleteRequest(
-      localStorage.getItem(email),
-      ev.target.dataset.id
+    await firebase.deleteRequest(
+      localStorage.getItem("tokenResponse"),
+      ev.target.dataset.id,
+      localStorage.getItem("email")
     );
   } catch (error) {
     console.error("fire.data-error", error);
@@ -86,17 +92,10 @@ async function onDelete(ev) {
 }
 // AYTH =====================================================================
 
-authButton.addEventListener("click", onAuth);
+authButton.addEventListener("click", onAuthForm);
 
-async function onAuth() {
-  try {
-    const fir = await createUserWithEmailAndPassword(auth, email, password);
-    // console.log("fiiiiir", fir);
-  } catch (error) {
-    console.error("jjjjjjjj-error", error);
-    const errorMessage = error.message;
-    alert(errorMessage);
-  }
+async function onAuthForm() {
+  modalAuth(auth);
 }
 
 let loadedElement = 0;
@@ -155,12 +154,16 @@ async function onsubmit(e) {
     date: new Date().toJSON(),
   };
   try {
-    const fire = await firebase.postRequest(
+    const bb = await firebase.postRequest(
       request,
-      localStorage.getItem(email)
+      localStorage.getItem("tokenResponse"),
+      localStorage.getItem("email")
     );
+    // ??????????????????????????????????????????????????
+    console.log("doooo", bb);
+    // ??????????????????????????????????????????????????
   } catch (error) {
-    console.error("fire.data-error", error);
+    console.error(error);
   }
   // ================================
   authHtml();

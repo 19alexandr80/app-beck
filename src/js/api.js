@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
+// const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
 
 export class NewApi {
   constructor() {
@@ -41,39 +41,42 @@ export class NewFirebase {
   constructor() {
     this.firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
   }
-  async postRequest(request, r = null) {
+  async postRequest(request, r = null, email) {
     try {
+      const nikEmail = email.substring(0, email.indexOf("."));
       const response = await axios.post(
-        `${this.firebaseApp}box.json?auth=${r}`,
+        `${this.firebaseApp}box/${nikEmail}.json?auth=${r}`,
         request
       );
 
       return response;
     } catch (error) {
-      alert("НЕТ РЕГЕСТРАЦИИ");
       console.error("errrrrror", error);
+      // alert(error.message);
     }
   }
-  async getRequest() {
+  async getRequest(r = null, email) {
     try {
+      const nikEmail = email.substring(0, email.indexOf("."));
       const respon = await axios.get(
-        "https://app-back-bb275-default-rtdb.firebaseio.com/box.json"
+        `${this.firebaseApp}box/${nikEmail}.json?auth=${r}`
       );
       return respon;
     } catch (error) {
       console.error(error);
+      alert(error.message);
     }
   }
-  async deleteRequest(r = null, id) {
+  async deleteRequest(r = null, id, email) {
     try {
+      const nikEmail = email.substring(0, email.indexOf("."));
       const response = await axios.delete(
-        `${this.firebaseApp}box/${id}.json?auth=${r}`
+        `${this.firebaseApp}box/${nikEmail}/${id}.json?auth=${r}`
       );
 
       return response;
     } catch (error) {
-      alert("НЕТ РЕГЕСТРАЦИИ");
-      console.error("errrrrror", error);
+      console.error("error-deleteRequest", error);
     }
   }
 }
