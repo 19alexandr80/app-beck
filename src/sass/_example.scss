@@ -5,12 +5,18 @@
   padding: 10px;
   margin-bottom: 20px;
   font-size: 24px;
-}
-.search-form button {
-  position: absolute;
-  top: 15px;
-
-  text-align: center;
+  & input {
+    font-size: 24px;
+    padding: 5px;
+  }
+  & button {
+    padding: 9px;
+    position: absolute;
+    top: 10px;
+    text-align: center;
+    background-color: cornflowerblue;
+    border-radius: 3px;
+  }
 }
 .gallery-div {
   display: flex;
