@@ -28,7 +28,7 @@ const authButton = document.querySelector(".auth-button");
 const authZone = document.querySelector(".auth-zone");
 
 const galleryEl = document.querySelector(".gallery");
-const form = document.querySelector("form");
+const form = document.querySelector(".search-form");
 
 const aapi = new NewApi();
 const lightbox = new SimpleLightbox(".gallery a", {
@@ -99,8 +99,7 @@ export async function authHtml() {
 
 async function onDelete(ev) {
   if (ev.target.tagName === "SPAN") {
-    console.log(ev.target.textContent);
-
+    form.elements.searchQuery.value = ev.target.textContent;
     aapi.setInput(ev.target.textContent);
     aapi.resetPege();
     try {
