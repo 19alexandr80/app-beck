@@ -4,10 +4,14 @@ import { getAuth } from "firebase/auth";
 import "./sass/index.scss";
 import Notiflix from "notiflix";
 import { NewApi, NewFirebase } from "./js/api.js";
+// ============================================================================
 import SimpleLightbox from "simplelightbox";
+// Не удалось найти файл объявления для модуля «simplelightbox».
+// ============================================================================
 import { modalAuth } from "./js/modal";
 import { modalSignIn } from "./js/modalSignIn";
-// modalAuth();
+
+console.log("hello world");
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBtpyq_JcjZVrgTcRGIRZbPiF1YdsGPM0",
@@ -18,26 +22,41 @@ const firebaseConfig = {
   messagingSenderId: "342626939408",
   appId: "1:342626939408:web:b6d958ff5664c393491095",
 };
-// =============================================================================
 const firre = initializeApp(firebaseConfig);
-// =============================================================================
 
 const firebase = new NewFirebase();
 const signInButton = document.querySelector(".sign-in-button");
 const authButton = document.querySelector(".auth-button");
 const authZone = document.querySelector(".auth-zone");
 
-// const email = "usanka80@gmail.com";
-// console.log(email.substring(0, email.indexOf(".")));
-// const password = 12345678;
+const galleryEl = document.querySelector(".gallery");
+const form = document.querySelector("form");
 
-authHtml();
+const aapi = new NewApi();
+const lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionDelay: 250,
+});
+
+const options = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.5,
+};
+const observer = new IntersectionObserver(observerCallback, options);
 
 const auth = getAuth();
+
+let loadedElement = 0;
+let lastEl = null;
+
+authHtml();
 
 // Listener auth ==============================================
 
 signInButton.addEventListener("click", onSignIn);
+authButton.addEventListener("click", onAuthForm);
+form.addEventListener("submit", onsubmit);
 
 function onSignIn() {
   modalSignIn(auth);
@@ -59,7 +78,7 @@ export async function authHtml() {
           .map((v) => {
             const reque = fire.data[v];
 
-            return `<li>Вапрос: ${reque.text} от: ${reque.date}
+            return `<li>Запит: <span>${reque.text}</span> від: ${reque.date}
             <button type="button" data-id="${v}">delete</button></li>`;
           })
           .join("");
@@ -68,7 +87,12 @@ export async function authHtml() {
           .querySelector(".auth-ul-zone")
           .addEventListener("click", onDelete);
       }
-      authZone.querySelector(".auth-zone__button").innerHTML = "";
+      const nikEmail = localStorage
+        .getItem("email")
+        .substring(0, localStorage.getItem("email").indexOf("."));
+      authZone.querySelector(
+        ".auth-zone__button"
+      ).innerHTML = `<h2>Запити від: ${nikEmail}</h2>`;
     } catch (error) {
       console.error(error);
     }
@@ -76,6 +100,18 @@ export async function authHtml() {
 }
 
 async function onDelete(ev) {
+  if (ev.target.tagName === "SPAN") {
+    console.log(ev.target.textContent);
+
+    aapi.setInput(ev.target.textContent);
+    aapi.resetPege();
+    try {
+      const data = await aapi.getUser();
+      submitProcessing(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   if (ev.target.tagName !== "BUTTON") {
     return;
   }
@@ -92,28 +128,9 @@ async function onDelete(ev) {
 }
 // AYTH =====================================================================
 
-authButton.addEventListener("click", onAuthForm);
-
 async function onAuthForm() {
   modalAuth(auth);
 }
-
-let loadedElement = 0;
-let lastEl = null;
-const galleryEl = document.querySelector(".gallery");
-const form = document.querySelector("form");
-form.addEventListener("submit", onsubmit);
-const aapi = new NewApi();
-const lightbox = new SimpleLightbox(".gallery a", {
-  captionsData: "alt",
-  captionDelay: 250,
-});
-const options = {
-  root: null,
-  rootMargin: "5px",
-  threshold: 0.5,
-};
-const observer = new IntersectionObserver(observerCallback, options);
 async function observerCallback(entries, observer) {
   if (entries[0].isIntersecting) {
     observer.unobserve(lastEl);
@@ -148,7 +165,6 @@ async function onsubmit(e) {
   }
   aapi.setInput(userValue);
   aapi.resetPege();
-  galleryEl.innerHTML = "";
   const request = {
     text: userValue,
     date: new Date().toJSON(),
@@ -183,6 +199,7 @@ function submitProcessing({ hits, totalHits }) {
     return;
   }
   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+  galleryEl.innerHTML = "";
   criet(hits);
   window.scrollBy({
     top: 52,

@@ -1,6 +1,5 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { authHtml } from "../index";
-
 const modalBox = document.querySelector(".modalWindow");
 let auth = null;
 

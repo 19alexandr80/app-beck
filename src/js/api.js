@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// const firebaseApp = "https://app-back-bb275-default-rtdb.firebaseio.com/";
-
 export class NewApi {
   constructor() {
     this.input = "";
@@ -34,8 +32,6 @@ export class NewApi {
     return this.amountOfElements;
   }
 }
-
-// ===============================================================
 
 export class NewFirebase {
   constructor() {
@@ -80,4 +76,3 @@ export class NewFirebase {
     }
   }
 }
-// ================================
