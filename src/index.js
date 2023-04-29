@@ -11,8 +11,6 @@ import SimpleLightbox from "simplelightbox";
 import { modalAuth } from "./js/modal";
 import { modalSignIn } from "./js/modalSignIn";
 
-console.log("hello world");
-
 const firebaseConfig = {
   apiKey: "AIzaSyCBtpyq_JcjZVrgTcRGIRZbPiF1YdsGPM0",
   authDomain: "app-back-bb275.firebaseapp.com",
